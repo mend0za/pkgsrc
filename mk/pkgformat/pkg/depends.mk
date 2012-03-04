@@ -38,12 +38,17 @@ _pkgformat-show-depends: .PHONY
 	DEPENDS|*)	${_REDUCE_DEPENDS_CMD} ${DEPENDS:Q} ;;		\
 	esac
 
+.if !empty(USE_CROSS_COMPILE:M[Yy][Ee][Ss])
+_REAL_BUILD_DEPENDS=${TARGET_BUILD_DEPENDS}
+.else
+_REAL_BUILD_DEPENDS=${BUILD_DEPENDS}
+.endif
 _LIST_DEPENDS_CMD=	\
 	${PKGSRC_SETENV} AWK=${AWK:Q} PKG_ADMIN=${PKG_ADMIN:Q} \
 		PKGSRCDIR=${PKGSRCDIR:Q} PWD_CMD=${PWD_CMD:Q} SED=${SED:Q} \
 		${SH} ${PKGSRCDIR}/mk/pkgformat/pkg/list-dependencies \
 			" "${BOOTSTRAP_DEPENDS:Q} \
-			" "${BUILD_DEPENDS:Q} \
+			" "${_REAL_BUILD_DEPENDS:Q} \
 			" "${DEPENDS:Q}
 
 _LIST_DEPENDS_CMD.bootstrap=	\

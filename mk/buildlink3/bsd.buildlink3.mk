@@ -222,7 +222,11 @@ ${_BLNK_ABIMETHOD.${_pkg_}}+=	${_abi_}:${BUILDLINK_PKGSRCDIR.${_pkg_}}
 .endfor
 .for _depmethod_ in DEPENDS BUILD_DEPENDS ABI_DEPENDS BUILD_ABI_DEPENDS
 .  if !empty(_BLNK_ADD_TO.${_depmethod_})
+.if !empty(USE_CROSS_COMPILE:M[Yy][Ee][Ss]) && ${_depmethod_} == "BUILD_DEPENDS"
+TARGET_${_depmethod_}+=	${_BLNK_ADD_TO.${_depmethod_}}
+.else
 ${_depmethod_}+=	${_BLNK_ADD_TO.${_depmethod_}}
+.endif
 .  endif
 .endfor	# _BLNK_DEPENDS
 
